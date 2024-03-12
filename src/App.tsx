@@ -4,6 +4,7 @@ import Price from './components/Price';
 import Description from './components/Description';
 import Image from './components/ProductImage';
 import Wrapper from './components/Wrapper';
+import Loader from "./components/Loader"
 import useFetchProducts from './custom hooks/useFetchProducts';
 import useCurrentProducts from './custom hooks/useCurrentProducts';
 
@@ -11,11 +12,8 @@ function App() {
   const { currentProducts, handleNextProducts, handlePreviousProducts } =
     useCurrentProducts();
 
-  const { data, isError, isLoading, error } = useFetchProducts(currentProducts);
+  const { data, isError, isLoading, error, isFetching } = useFetchProducts(currentProducts);
 
-  if (isLoading) {
-    return <h1>Loading ...</h1>;
-  }
 
   if (isError) return <div>Error: {error?.message}</div>;
 
@@ -32,6 +30,7 @@ function App() {
                 key={product.description}
                 description={product.description}
               />
+
             </ProductCard>
           );
         })}
@@ -50,6 +49,7 @@ function App() {
           >
             Next
           </button>
+          <Loader isLoading={isLoading} isFetching={isFetching}/>
         </div>
       </Wrapper>
     </>
