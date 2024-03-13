@@ -7,6 +7,8 @@ import Wrapper from './components/Wrapper';
 import Loader from "./components/Loader"
 import useFetchProducts from './custom hooks/useFetchProducts';
 import useCurrentProducts from './custom hooks/useCurrentProducts';
+import Button from './components/Button';
+import ButtonsContainer from './components/ButtonsContainer';
 
 function App() {
   const { currentProducts, handleNextProducts, handlePreviousProducts } =
@@ -17,10 +19,19 @@ function App() {
 
   if (isError) return <div>Error: {error?.message}</div>;
 
+  type Product = {
+    description: "string",
+    id: number,
+    price: number,
+    thumbnail: string,
+    title: string
+  }
+
   return (
     <>
       <Wrapper>
-        {data?.products?.map((product) => {
+        {data?.products?.map((product: Product) => {
+          console.log(product)
           return (
             <ProductCard key={product.id}>
               <Title key={product.title} title={product.title} />
@@ -34,23 +45,12 @@ function App() {
             </ProductCard>
           );
         })}
-        <div className="flex gap-4">
-          <button
-            className="text-center px-4 py-2 bg-pink-600 text-white"
-            onClick={handlePreviousProducts}
-            disabled={currentProducts === 0}
-          >
-            Previous
-          </button>
-          <button
-            className="text-center px-4 py-2 bg-pink-600 text-white"
-            onClick={handleNextProducts}
-            disabled={currentProducts >= 30}
-          >
-            Next
-          </button>
-          <Loader isLoading={isLoading} isFetching={isFetching}/>
-        </div>
+        <ButtonsContainer isLoading={isLoading} isFetching={isFetching}>
+          <Button onClickFunction={handlePreviousProducts} label='Previous' disabled={currentProducts === 0} />
+          <Button onClickFunction={handleNextProducts} label='Next' disabled={currentProducts >= 30} />
+
+        </ButtonsContainer>
+        <Loader isLoading={isLoading} isFetching={isFetching}/>
       </Wrapper>
     </>
   );
